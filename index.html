@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            // Get IP address from the API
+            $.getJSON("https://api.ipify.org/?format=jsonp&callback=?", function(data) {
+                // Update the Quick Base record with the captured IP address
+                var recordId = getParameterByName('rid'); // Assuming you pass the record ID as a parameter
+                var updateUrl = "https://your-realm.quickbase.com/db/your-table?act=API_EditRecord&rid=" + recordId + "&_fid_your_ip_field=" + data.ip;
+
+                // Make the update request
+                $.get(updateUrl, function(response) {
+                    console.log("IP address updated successfully");
+                });
+            });
+        });
+
+        // Function to get query parameters from the URL
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+    </script>
+</head>
+<body>
+    <!-- Your HTML content here if needed -->
+</body>
+</html>
